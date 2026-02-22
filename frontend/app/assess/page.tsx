@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PatientForm from "@/components/PatientForm";
 import { predictRisk } from "@/lib/api";
@@ -10,6 +10,14 @@ export default function AssessPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    const user = sessionStorage.getItem("maternalguard_user");
+    if (!user) {
+      router.push("/signin");
+    }
+  }, [router]);
 
   const handleSubmit = async (data: PatientData) => {
     setIsLoading(true);
